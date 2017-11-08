@@ -1,0 +1,9 @@
+- hosts: all
+  tasks:
+    - name: Run uptime command
+      shell: uptime
+      register: OUT
+      
+    - name: Print output of shell 
+      debug:
+        msg : "{{OUT.stdout}}"

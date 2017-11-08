@@ -1,0 +1,14 @@
+- hosts: all
+  vars:
+    NAME : CIT
+  tasks:
+    - name: Print variable data
+      debug:
+        msg: "NAME = {{NAME}}"
+    
+    - name: Print again variable data
+      debug:
+        msg: "NAME = {{NAME}}"
+      vars:
+        NAME : GIT
+        

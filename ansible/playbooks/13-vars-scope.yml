@@ -1,0 +1,17 @@
+- name: Play1
+  hosts: all
+  vars:
+    NAME : RAMA
+  tasks:
+    - name: Print NAME in Play1
+      shell: uptime
+      register: out
+
+        
+- name: Play2
+  hosts: all
+  tasks:
+    - name: Print NAME in Play2
+      debug: 
+        msg: "{{out}}"
+        

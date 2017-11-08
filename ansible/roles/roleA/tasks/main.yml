@@ -1,0 +1,3 @@
+- name: Sample from RoleA
+  debug:
+        msg: " Sample from {{NAME}}"

@@ -1,0 +1,25 @@
+- hosts: DEV
+  tasks:
+    - name: find log files
+      find:
+        paths: /opt/test
+        patterns: '*.log'
+      register: out
+      
+    - name: print out
+      debug:
+        msg: "{{out}}"
+     
+    - name: remove files
+      file:
+        name: "{{item.path}}"
+        state: absent
+      with_items: "{{out.files}}"
+    
+    - name: send email
+      mail:
+        host: localhost
+        port: 25
+        to: Student <student@localhost>
+        subject: Ansible-report
+        body: 'System {{ ansible_hostname }} has been successfully provisioned.'

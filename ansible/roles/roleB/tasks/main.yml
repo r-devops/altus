@@ -1,0 +1,3 @@
+- name: Sample from RoleB
+  debug:
+        msg: "Sample from RoleB"

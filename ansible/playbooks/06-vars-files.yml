@@ -1,0 +1,8 @@
+- hosts: all
+  vars_files:
+    - VARS.yml
+   
+  tasks:
+    - name : Print Student Data
+      debug:
+        msg: "Student Name = {{STUDENT_NAME}}  ,, Student Age = {{STUDENT_AGE}}"

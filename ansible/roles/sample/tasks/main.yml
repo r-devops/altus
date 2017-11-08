@@ -1,0 +1,3 @@
+- name: print var
+  debug:
+        msg: "NAME = {{NAME}}"

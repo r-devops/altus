@@ -1,0 +1,14 @@
+- hosts: all
+  tasks:
+    - name: Run uptime command
+      shell: uptime
+      register: OUT
+      
+    - name: define some variable
+      set_fact:
+        UPTIME: "{{OUT.stdout}}"
+        
+    - name: get uptime variable
+      debug:
+        msg: "{{UPTIME}}"
+        

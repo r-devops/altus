@@ -1,0 +1,11 @@
+- hosts: all
+  vars_prompt:
+    - name: NAME
+      prompt: Enter your Name
+      private: no
+      
+  tasks:
+    - name: Print Name
+      debug:
+        msg: "NAME = {{NAME}}"
+        

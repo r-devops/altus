@@ -1,0 +1,16 @@
+- hosts: DEV
+  tasks:
+    - name: Install httpd
+      package:
+        name: httpd
+        state: installed
+      tags:
+        - installation
+        - configuration
+        
+    - name: Start httpd
+      service:
+        name: httpd
+        state: started
+      tags:
+        - configuration

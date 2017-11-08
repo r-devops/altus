@@ -1,0 +1,6 @@
+- hosts: all
+  vars:
+    NAME : ANSIBLE_ROLES
+  roles:
+    - roleB
+    #- sample

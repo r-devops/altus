@@ -1,0 +1,13 @@
+- name: Install Packages
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install wget package
+      package:
+        name: wget
+        state: installed
+    
+    - name: Install zip package
+      package:
+        name: zip
+        state: installed

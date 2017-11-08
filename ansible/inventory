@@ -1,0 +1,4 @@
+[PROD]
+prdnode01 FRUIT=Apple DBIP=10.10.128.0
+[DEV]
+devnode1 FRUIT=Orange DBIP=172.168.10.22

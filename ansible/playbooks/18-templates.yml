@@ -1,0 +1,23 @@
+- hosts: all
+#  vars:
+#    SAMDB: 192.168.100.20
+  tasks:
+    - name: Copy context file 
+      template:
+        src: /root/ansible/playbooks/files/context.xml.j2
+        dest: /tmp/context.xml
+      vars:
+        SAMDB: 10.129.20.111
+      when: ansible_local.env.ENV == "PROD"
+    
+    - name: Copy context file 
+      template:
+        src: /root/ansible/playbooks/files/context.xml.j2
+        dest: /tmp/context.xml
+      vars:
+        SAMDB: 172.129.20.111
+      when: ansible_local.env.ENV == "DEV"
+      
+    - name: print env
+      debug:
+        msg: "ENV = {{ansible_local.env.ENV}}"

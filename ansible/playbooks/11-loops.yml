@@ -1,0 +1,9 @@
+- hosts: all
+  tasks:
+    - name: Print some values in loop
+      debug:
+        msg: "Student Name = {{item}}"
+      with_items:
+        - RAMA
+        - RAJU
+        - RAHIM

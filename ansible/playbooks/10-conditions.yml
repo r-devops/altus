@@ -1,0 +1,6 @@
+- hosts: all
+  tasks:
+    - name: Print some data
+      debug:
+        msg: "Hello"
+      when: ansible_distribution == 'Debian'

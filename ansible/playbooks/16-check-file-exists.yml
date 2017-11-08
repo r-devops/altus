@@ -1,0 +1,16 @@
+- hosts: all
+  tasks:
+    - stat:
+        path: /etc/httpd/modules/mod_jk.so1
+      register: out
+      
+    - debug:
+        msg: "{{out}}"
+        
+    - debug:
+        msg: "Sorry file does not exist"
+      when: out.stat.exists == false
+        
+    - debug:
+        msg: "Yes, the file exists"
+      when: out.stat.exists == true

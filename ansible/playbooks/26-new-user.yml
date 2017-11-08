@@ -1,0 +1,18 @@
+- hosts: DEV
+  tasks:
+    - name: create user
+      user:
+        name: student
+        password: "$6$SomeSalt$hg.Fxh3AGiLSpjArd/8uvNGGjxjHX7UNMji8HJVa/EjmiuXj406GUqfx0Lax2t8GrNqwtJT7bDLkyX3ME0Vko/"
+        
+    - name: ccreate .ssh dir
+      file:
+        path: /home/student/.ssh
+        state: directory
+        mode: 0700
+        
+    - name: update authorized_keys
+      authorized_key:
+        user: student
+        state: present
+        key: https://raw.githubusercontent.com/carreerit/altus/master/admin.pub

@@ -1,0 +1,143 @@
+- name: Install web server
+  hosts: all
+  tasks:
+    - name: Install web server packages
+      package:
+        name: "{{item}}"
+      with_items:
+        - httpd
+        - httpd-devel
+        - gcc
+        
+    - name: start web service
+      service:
+        name: "httpd"
+        state: started
+        enabled: yes
+        
+        
+- name: Install Tomcat
+  hosts: all
+  vars:
+    URL: "http://www-us.apache.org/dist/tomcat/tomcat-9/v9.0.1/bin/apache-tomcat-9.0.1.tar.gz"
+    TAR_LOC: "/opt/apache-tomcat-9.0.1.tar.gz"
+  tasks:
+    - name: Download Apache Tomcat
+      get_url:
+        url: "{{URL}}"
+        dest: "{{TAR_LOC}}"
+    
+    - name: Extact tar file
+      unarchive:
+        remote_src: yes
+        src: "{{TAR_LOC}}"
+        dest: /opt
+        
+    - name: Install Java
+      package:
+        name: java
+        state: installed
+    
+    - name: Check whether the tomcat is running or not.
+      shell: ps -ef | grep /opt/apache-tomcat-9.0.1 | grep -v grep
+      register: out
+      ignore_errors: yes
+    
+    - name: Start Tomcat
+      shell: nohup /opt/apache-tomcat-9.0.1/bin/startup.sh
+      when: out.rc == 1
+      
+- name: Install DB Server
+  hosts: all
+  tasks:
+    - name: Install MariaDB
+      package:
+        name: "{{item}}"
+        state: installed
+      with_items:
+        - mariadb
+        - mariadb-server
+        - mariadb-devel
+        
+    - name: Start MariaDB
+      service:
+        name: "mariadb"
+        state: started
+        enabled: yes
+
+- name: Install and configure ModJK
+  hosts: all
+  vars:
+    URL: "http://redrockdigimark.com/apachemirror/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz"
+    DEST: "/opt"
+    
+  tasks:
+    - name: check whether mod_jk.so file exists or not
+      stat:
+        path: /etc/httpd/modules/mod_jk.so
+      register: out
+    
+    - name: Download and extract ModJK
+      unarchive:
+        src: "{{ URL }}"
+        dest: "{{ DEST }}"
+        remote_src: yes
+      when: out.stat.exists == false
+      
+    - name: Compile ModJK
+      shell: ./configure --with-apxs=/usr/bin/apxs && make && make install
+      args:
+        chdir: /opt/tomcat-connectors-1.2.42-src/native
+      when: out.stat.exists == false
+      
+    - name: Copy modjk config files
+      copy:
+        src: /root/ansible/playbooks/files/{{item}}
+        dest: /etc/httpd/conf.d/{{item}}
+      with_items:
+        - modjk.conf
+        - workers.properties
+  
+
+- name: Configure Tomcat with JDBC
+  hosts: all
+  tasks:
+    - name: Download war and jar files
+      get_url:
+        url: "{{item.URL}}"
+        dest: "{{item.dest}}"
+      with_items:
+        - { URL: 'https://github.com/carreerit/cogito/raw/master/appstack/student.war', dest: '/opt/apache-tomcat-9.0.1/webapps/student.war' }
+        - { URL: 'https://github.com/carreerit/cogito/raw/master/appstack/mysql-connector-java-5.1.40.jar', dest: '/opt/apache-tomcat-9.0.1/lib/mysql-connector-java-5.1.40.jar' }
+        
+    - name: Update Context.xml 
+      copy:
+        src: /root/ansible/playbooks/files/context.xml
+        dest: /opt/apache-tomcat-9.0.1/conf/context.xml
+        
+        
+- name: Create DB and Tables
+  hosts: all
+  tasks:
+    - name: copy sql file
+      copy:
+        src: /root/ansible/playbooks/files/student.sql
+        dest: /tmp/student.sql
+    
+    - name: Install PIP RPM
+      package:
+        name: "{{item}}" 
+        state: installed
+      with_items:
+        - python-devel
+        - python2-pip
+        
+    - name: Install mysql-python module
+      pip:
+        name: MySQL-python
+        
+    - name: Create DB
+      mysql_db:
+        name: all
+        state: import
+        target: /tmp/student.sql

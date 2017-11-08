@@ -1,0 +1,13 @@
+- hosts: all
+  tasks:
+    - name: Install web server
+      package:
+        name: httpd
+        state: installed
+      notify: Restart web server
+      
+  handlers:
+    - name: Restart web server
+      service:
+        name: httpd
+        state: restarted

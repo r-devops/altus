@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    - name: Print fruit name
+      debug:
+        msg: "FRUIT NAME = {{FRUIT}}"

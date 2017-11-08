@@ -1,0 +1,15 @@
+- name: Install web server
+  package:
+    name: "{{PACK_NAME}}" 
+    state: installed
+  notify: Restart web server
+    
+- name: Copy abc.txt file
+  copy:
+    src: abc.txt
+    dest: /tmp/abc.txt
+
+- name: Print fruit name
+  debug:
+    msg: "FRUIT NAME = {{FRUIT}} "
+

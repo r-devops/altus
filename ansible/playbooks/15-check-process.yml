@@ -1,0 +1,14 @@
+- hosts: all
+  tasks:
+    - name: check tomcat process
+      shell: ps -ef | grep tomcat | grep -v grep 
+      register: out
+      
+    - name: Print
+      debug:
+        msg: "{{out}}"
+        
+    - name: Run some command
+      shell: echo 
+      when: out.rc == 1
+      

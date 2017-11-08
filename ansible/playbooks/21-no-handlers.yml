@@ -1,0 +1,11 @@
+- hosts: all
+  tasks:
+    - name: Install web server
+      package:
+        name: httpd
+        state: installed
+        
+    - name: Restart web server
+      service:
+        name: httpd
+        state: restarted

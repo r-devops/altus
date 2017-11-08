@@ -1,0 +1,7 @@
+- hosts: all
+  vars_files:
+    - "vars/{{ansible_local.env.ENV}}.yml" 
+  tasks:
+    - name: print DB IP
+      debug:
+        msg: "{{SAMDB}}"
