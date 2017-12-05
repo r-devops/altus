@@ -2,8 +2,8 @@
   tasks:
     - name: create ec2 instance
       ec2:
-        aws_access_key: AKIAIDCGJRSLZI5NZVZA
-        aws_secret_key: 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
+        aws_access_key: 
+        aws_secret_key: 
         key_name: admin
         region: us-east-2
         instance_type: t2.micro
